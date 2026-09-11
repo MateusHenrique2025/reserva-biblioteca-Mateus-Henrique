@@ -1,11 +1,13 @@
 // BookList.jsx
 // Componente responsável por renderizar a lista completa de livros.
+// BookList NÃO decide nada — apenas encaminha a função recebida.
 
-// Importa o componente BookCard para renderizar cada item individualmente
 import BookCard from "./BookCard";
 
-// Recebe a prop 'books' (array de objetos de livros)
-export default function BookList({ books }) {
+// Recebe as props:
+// - books: array de objetos de livros
+// - onReserve: função de callback que veio do App
+export default function BookList({ books, onReserve }) {
   // Se a lista estiver vazia, exibe uma mensagem informativa
   if (books.length === 0) {
     return <p>Nenhum livro no acervo.</p>;
@@ -15,11 +17,15 @@ export default function BookList({ books }) {
     <section className="book-list" aria-label="Acervo">
       {/* 
         Percorre o array de livros usando .map()
-        - A chave (key) é o ID único do livro, garantindo a performance do React.
-        - Para cada livro, renderiza um <BookCard /> passando o objeto como prop.
+        - A chave (key) é o ID único do livro.
+        - Encaminha 'onReserve' para cada BookCard (não decide nada, só repassa).
       */}
       {books.map((book) => (
-        <BookCard key={book.id} book={book} />
+        <BookCard 
+          key={book.id} 
+          book={book} 
+          onReserve={onReserve} 
+        />
       ))}
     </section>
   );
