@@ -1,20 +1,18 @@
 // App.jsx
-// Agora o App guarda a lista de livros em estado com useState.
+// Agora o App também consegue adicionar novos livros à lista.
 
 import { useState } from "react";
 import "./App.css";
-// Importa os dados iniciais dos livros
 import { books as initialBooks } from "./data/books";
 import BookList from "./components/BookList";
+import BookForm from "./components/BookForm";
 import Panel from "./components/Panel";
 
 export default function App() {
-  // Estado que guarda a lista de livros.
-  // Começa com os dados do arquivo books.js.
+  // Estado que guarda a lista de livros
   const [books, setBooks] = useState(initialBooks);
 
-  // Alterna o campo 'available' do livro clicado.
-  // A atualização é IMUTÁVEL: usamos .map() e espalhamos o objeto (...book).
+  // Alterna o campo 'available' do livro clicado (atualização imutável)
   function handleReserve(bookId) {
     setBooks((prevBooks) =>
       prevBooks.map((book) =>
@@ -25,8 +23,12 @@ export default function App() {
     );
   }
 
-  // Contador calculado (não guardado em outro estado).
-  // Filtra os livros disponíveis e conta quantos são.
+  // Adiciona um novo livro ao final da lista (atualização imutável)
+  function handleAddBook(newBook) {
+    setBooks((prevBooks) => [...prevBooks, newBook]);
+  }
+
+  // Contador calculado (não guardado em outro estado)
   const availableCount = books.filter((book) => book.available).length;
 
   return (
@@ -42,6 +44,12 @@ export default function App() {
         </p>
       </header>
 
+      {/* Painel com o formulário de cadastro, acima da lista */}
+      <Panel title="Novo livro">
+        <BookForm onAdd={handleAddBook} />
+      </Panel>
+
+      {/* Painel com a lista de livros */}
       <Panel title="Acervo">
         <BookList books={books} onReserve={handleReserve} />
       </Panel>
