@@ -1,21 +1,33 @@
 // App.jsx
-// Componente principal que agora contém a lógica de reserva.
+// Agora o App guarda a lista de livros em estado com useState.
 
+import { useState } from "react";
 import "./App.css";
-// Importa os dados dos livros do arquivo books.js
-import { books } from "./data/books";
-// Importa o componente que renderiza a lista
+// Importa os dados iniciais dos livros
+import { books as initialBooks } from "./data/books";
 import BookList from "./components/BookList";
-// Importa o componente de composição Panel
 import Panel from "./components/Panel";
 
 export default function App() {
-  // A função de verdade mora no App.
-  // Por enquanto, apenas mostra um alerta com o id do livro.
-  // Na Etapa 4 ela vira a ação de verdade.
+  // Estado que guarda a lista de livros.
+  // Começa com os dados do arquivo books.js.
+  const [books, setBooks] = useState(initialBooks);
+
+  // Alterna o campo 'available' do livro clicado.
+  // A atualização é IMUTÁVEL: usamos .map() e espalhamos o objeto (...book).
   function handleReserve(bookId) {
-    window.alert(`Livro ${bookId} — ação ainda não implementada`);
+    setBooks((prevBooks) =>
+      prevBooks.map((book) =>
+        book.id === bookId
+          ? { ...book, available: !book.available }
+          : book
+      )
+    );
   }
+
+  // Contador calculado (não guardado em outro estado).
+  // Filtra os livros disponíveis e conta quantos são.
+  const availableCount = books.filter((book) => book.available).length;
 
   return (
     <main className="app">
@@ -23,14 +35,13 @@ export default function App() {
         <p className="eyebrow">BIBLIOTECA ITEAM</p>
         <h1>Reserva de livros do acervo.</h1>
         <p>Consulte a disponibilidade e reserve o que precisar.</p>
+
+        {/* Contador calculado no topo da página */}
+        <p className="counter">
+          {availableCount} de {books.length} livros disponíveis
+        </p>
       </header>
 
-      {/* 
-        Envolve a lista em um Panel com título.
-        O BookList é passado como children do Panel.
-        A função handleReserve é passada como prop para o BookList,
-        que por sua vez repassa para cada BookCard.
-      */}
       <Panel title="Acervo">
         <BookList books={books} onReserve={handleReserve} />
       </Panel>
