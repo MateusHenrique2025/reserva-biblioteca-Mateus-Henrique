@@ -4,7 +4,7 @@
   --cinza-fundo: #f6f8fb;
   --verde: #0f7b46;
   --vermelho: #b42318;
-}
+}nãop
 
 * {
   box-sizing: border-box;
@@ -13,7 +13,7 @@
 body {
   margin: 0;
   background: var(--cinza-fundo);
-  color: #1a2233;
+  color: #0d1526;
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -29,11 +29,12 @@ body {
   margin: 4px 0 8px;
   font-size: 28px;
   line-height: 1.25;
+  color: #0d1526; /* Nova cor */
 }
 
 .hero p {
   margin: 0;
-  color: #55617a;
+  color: #4a5568;
 }
 
 .eyebrow {
@@ -63,6 +64,7 @@ body {
 .panel-header h2 {
   margin: 0;
   font-size: 18px;
+  color: #0d1526; /* Nova cor */
 }
 
 .book-list {
@@ -84,11 +86,12 @@ body {
 .book-card h2 {
   margin: 0 0 4px;
   font-size: 17px;
+  color: #0d1526; /*acrecentei a cor do nome do livro*/
 }
 
 .book-card p {
   margin: 0;
-  color: #55617a;
+  color: #4a5568;
   font-size: 14px;
 }
 
@@ -142,7 +145,7 @@ button:hover {
 
 .field input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 10px 1px;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font: inherit;
