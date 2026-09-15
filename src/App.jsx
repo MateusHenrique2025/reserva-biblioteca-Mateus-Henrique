@@ -1,58 +1,70 @@
-// App.jsx
-// Agora o App também consegue adicionar novos livros à lista.
-
-import { useState } from "react";
-import "./App.css";
+import { useEffect, useState } from "react";
 import { books as initialBooks } from "./data/books";
 import BookList from "./components/BookList";
 import BookForm from "./components/BookForm";
 import Panel from "./components/Panel";
+import "./App.css";
+
+// 🔑 Chave do armazenamento — FORA do componente
+const STORAGE_KEY = "reserva-biblioteca:books";
+
+// 📥 Função de carga — FORA do componente
+function loadBooks() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return initialBooks;
+    const parsed = JSON.parse(stored);
+    return Array.isArray(parsed) ? parsed : initialBooks;
+  } catch (error) {
+    console.error("Erro ao carregar livros:", error);
+    return initialBooks;
+  }
+}
 
 export default function App() {
-  // Estado que guarda a lista de livros
-  const [books, setBooks] = useState(initialBooks);
+  // ✅ Inicialização preguiçosa: passa a FUNÇÃO, sem parênteses
+  const [books, setBooks] = useState(loadBooks);
 
-  // Alterna o campo 'available' do livro clicado (atualização imutável)
-  function handleReserve(bookId) {
-    setBooks((prevBooks) =>
-      prevBooks.map((book) =>
-        book.id === bookId
-          ? { ...book, available: !book.available }
-          : book
+  // 💾 Sempre que books mudar, salva no localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
+  }, [books]);
+
+  function toggleBook(id) {
+    setBooks((prev) =>
+      prev.map((book) =>
+        book.id === id ? { ...book, reserved: !book.reserved } : book
       )
     );
   }
 
-  // Adiciona um novo livro ao final da lista (atualização imutável)
-  function handleAddBook(newBook) {
-    setBooks((prevBooks) => [...prevBooks, newBook]);
+  function addBook(newBook) {
+    setBooks((prev) => [
+      ...prev,
+      { ...newBook, id: crypto.randomUUID(), reserved: false },
+    ]);
   }
 
-  // Contador calculado (não guardado em outro estado)
-  const availableCount = books.filter((book) => book.available).length;
+  const availableCount = books.filter((b) => !b.reserved).length;
 
   return (
-    <main className="app">
-      <header className="hero">
-        <p className="eyebrow">BIBLIOTECA ITEAM</p>
-        <h1>Reserva de livros do acervo.</h1>
-        <p>Consulte a disponibilidade e reserve o que precisar.</p>
-
-        {/* Contador calculado no topo da página */}
-        <p className="counter">
+    <div className="app">
+      <header className="app-header">
+        <h1>Reserva da Biblioteca</h1>
+        <p>
           {availableCount} de {books.length} livros disponíveis
         </p>
       </header>
 
-      {/* Painel com o formulário de cadastro, acima da lista */}
-      <Panel title="Novo livro">
-        <BookForm onAdd={handleAddBook} />
-      </Panel>
+      <main>
+        <Panel title="Acervo">
+          <BookList books={books} onToggle={toggleBook} />
+        </Panel>
 
-      {/* Painel com a lista de livros */}
-      <Panel title="Acervo">
-        <BookList books={books} onReserve={handleReserve} />
-      </Panel>
-    </main>
+        <Panel title="Cadastrar novo livro">
+          <BookForm onAdd={addBook} />
+        </Panel>
+      </main>
+    </div>
   );
 }
