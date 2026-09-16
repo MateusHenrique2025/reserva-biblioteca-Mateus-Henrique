@@ -1,16 +1,15 @@
-import { NavLink, Route, Routes } from "react-router";
+import { Routes, Route, NavLink } from "react-router";
+import "./App.css";
 import AcervoPage from "./pages/AcervoPage";
 import NovoLivroPage from "./pages/NovoLivroPage";
 import SobrePage from "./pages/SobrePage";
 import NotFoundPage from "./pages/NotFoundPage";
-import "./App.css";
 
 export default function App() {
   return (
-    <div className="app">
-      {/* Cabeçalho fixo — FORA do Routes */}
+    <>
       <header className="app-header">
-        <h1>Reserva da Biblioteca</h1>
+        <span>BIBLIOTECA ITEAM</span>
         <nav>
           <NavLink to="/" end>
             Acervo
@@ -20,8 +19,7 @@ export default function App() {
         </nav>
       </header>
 
-      {/* Conteúdo que troca — DENTRO do Routes */}
-      <main>
+      <main className="app">
         <Routes>
           <Route path="/" element={<AcervoPage />} />
           <Route path="/novo" element={<NovoLivroPage />} />
@@ -29,6 +27,6 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-    </div>
+    </>
   );
 }

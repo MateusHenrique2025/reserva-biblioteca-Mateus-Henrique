@@ -1,20 +1,19 @@
-import { useBooks } from "../context/BooksContext";
+import { useContext } from "react";
+import BookCard from "./BookCard";
+import { BooksContext } from "../context/BooksContext";
 
 export default function BookList() {
-  const { books, toggleBook } = useBooks();
+  const { books, toggleBook } = useContext(BooksContext);
+
+  if (books.length === 0) {
+    return <p>Nenhum livro no acervo.</p>;
+  }
 
   return (
-    <ul className="book-list">
+    <section className="book-list" aria-label="Acervo">
       {books.map((book) => (
-        <li key={book.id}>
-          <span>
-            {book.title} — {book.author}
-          </span>
-          <button onClick={() => toggleBook(book.id)}>
-            {book.reserved ? "Devolver" : "Reservar"}
-          </button>
-        </li>
+        <BookCard key={book.id} book={book} onReserve={toggleBook} />
       ))}
-    </ul>
+    </section>
   );
 }

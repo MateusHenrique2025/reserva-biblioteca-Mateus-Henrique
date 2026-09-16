@@ -1,17 +1,20 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { books as initialBooks } from "../data/books";
+import { createContext, useState, useEffect } from "react";
+import { books } from "../data/books";
 
 const STORAGE_KEY = "reserva-biblioteca:books";
 
 function loadBooks() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+
+  if (!stored) {
+    return books;
+  }
+
   try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) return initialBooks;
     const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? parsed : initialBooks;
-  } catch (error) {
-    console.error("Erro ao carregar livros:", error);
-    return initialBooks;
+    return Array.isArray(parsed) ? parsed : books;
+  } catch {
+    return books;
   }
 }
 
@@ -24,35 +27,23 @@ export function BooksProvider({ children }) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(books));
   }, [books]);
 
-  function toggleBook(id) {
-    setBooks((prev) =>
-      prev.map((book) =>
-        book.id === id ? { ...book, reserved: !book.reserved } : book
+  function toggleBook(bookId) {
+    setBooks((currentBooks) =>
+      currentBooks.map((book) =>
+        book.id === bookId ? { ...book, available: !book.available } : book
       )
     );
   }
 
   function addBook(newBook) {
-    setBooks((prev) => [
-      ...prev,
-      { ...newBook, id: crypto.randomUUID(), reserved: false },
-    ]);
+    setBooks((currentBooks) => [...currentBooks, newBook]);
   }
 
-  const availableCount = books.filter((b) => !b.reserved).length;
+  const availableCount = books.filter((book) => book.available).length;
+
+  const value = { books, availableCount, toggleBook, addBook };
 
   return (
-    <BooksContext.Provider
-      value={{ books, availableCount, toggleBook, addBook }}
-    >
-      {children}
-    </BooksContext.Provider>
+    <BooksContext.Provider value={value}>{children}</BooksContext.Provider>
   );
-}
-
-// Atalho opcional para consumir o contexto
-export function useBooks() {
-  const ctx = useContext(BooksContext);
-  if (!ctx) throw new Error("useBooks deve ser usado dentro de BooksProvider");
-  return ctx;
 }

@@ -1,31 +1,61 @@
-import { useState } from "react";
-import { useBooks } from "../context/BooksContext";
+import { useState, useContext } from "react";
+import { BooksContext } from "../context/BooksContext";
+
+const initialForm = { title: "", author: "" };
 
 export default function BookForm() {
-  const { addBook } = useBooks();
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
+  const { addBook } = useContext(BooksContext);
+  const [form, setForm] = useState(initialForm);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (!title.trim() || !author.trim()) return;
-    addBook({ title, author });
-    setTitle("");
-    setAuthor("");
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setForm((currentForm) => ({ ...currentForm, [name]: value }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    if (form.title.trim() === "" || form.author.trim() === "") {
+      setError("Preencha o título e o autor.");
+      return;
+    }
+
+    addBook({
+      id: crypto.randomUUID(),
+      title: form.title,
+      author: form.author,
+      available: true,
+    });
+
+    setForm(initialForm);
+    setError("");
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Título"
-      />
-      <input
-        value={author}
-        onChange={(e) => setAuthor(e.target.value)}
-        placeholder="Autor"
-      />
+    <form className="book-form" onSubmit={handleSubmit}>
+      <div className="field">
+        <label htmlFor="title">Título</label>
+        <input
+          id="title"
+          name="title"
+          value={form.title}
+          onChange={handleChange}
+        />
+      </div>
+
+      <div className="field">
+        <label htmlFor="author">Autor</label>
+        <input
+          id="author"
+          name="author"
+          value={form.author}
+          onChange={handleChange}
+        />
+      </div>
+
+      {error && <p className="form-error">{error}</p>}
+
       <button type="submit">Cadastrar</button>
     </form>
   );

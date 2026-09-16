@@ -4,7 +4,11 @@ import Panel from "../components/Panel";
 export default function NovoLivroPage() {
   return (
     <>
-      <h2>Cadastrar novo livro</h2>
+      <header className="hero">
+        <p className="eyebrow">BIBLIOTECA ITEAM</p>
+        <h1>Cadastrar novo livro</h1>
+      </header>
+
       <Panel title="Novo livro">
         <BookForm />
       </Panel>

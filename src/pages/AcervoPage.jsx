@@ -1,19 +1,22 @@
+import { useContext } from "react";
+import { BooksContext } from "../context/BooksContext";
 import BookList from "../components/BookList";
 import Panel from "../components/Panel";
-import { useBooks } from "../context/BooksContext";
 
 export default function AcervoPage() {
-  const { availableCount, books } = useBooks();
+  const { books, availableCount } = useContext(BooksContext);
 
   return (
     <>
-      <header className="page-header">
-        <h2>Acervo</h2>
+      <header className="hero">
+        <p className="eyebrow">BIBLIOTECA ITEAM</p>
+        <h1>Reserva de livros do acervo.</h1>
         <p>
           {availableCount} de {books.length} livros disponíveis
         </p>
       </header>
-      <Panel title="Livros">
+
+      <Panel title="Acervo">
         <BookList />
       </Panel>
     </>

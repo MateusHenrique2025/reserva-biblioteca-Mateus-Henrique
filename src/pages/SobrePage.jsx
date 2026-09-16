@@ -1,12 +1,15 @@
 export default function SobrePage() {
   return (
-    <>
-      <h2>Sobre</h2>
+    <header className="hero">
+      <p className="eyebrow">BIBLIOTECA ITEAM</p>
+      <h1>Sobre o projeto</h1>
       <p>
-        A Reserva da Biblioteca é um projeto de estudo do módulo de React do
-        curso Full Stack do ITEAM. Aqui você pode cadastrar livros, reservar e
-        devolver — e tudo fica salvo no seu navegador.
+        Este projeto é uma atividade prática do Módulo 04 — Desenvolvimento
+        Front-end com React, da Capacitação em Desenvolvimento Full Stack do
+        ITEAM. A aplicação simula o sistema de reservas de uma biblioteca,
+        permitindo consultar o acervo, reservar ou devolver livros e cadastrar
+        novos títulos.
       </p>
-    </>
+    </header>
   );
 }
